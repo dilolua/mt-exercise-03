@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 scripts=$(dirname "$0")
 base=$scripts/..
@@ -9,8 +9,7 @@ mkdir -p $data
 
 tools=$base/tools
 
-# link default training data for easier access
-
+# Link default training data for easier access
 mkdir -p $data/wikitext-2
 
 for corpus in train valid test; do
@@ -18,26 +17,23 @@ for corpus in train valid test; do
     ln -snf $absolute_path $data/wikitext-2/$corpus.txt
 done
 
-# download a different interesting data set!
+# Download a different book - "Don Quixote" by Miguel de Cervantes
+mkdir -p $data/bleak
 
-mkdir -p $data/grimm
+mkdir -p $data/bleak/raw
 
-mkdir -p $data/grimm/raw
+wget https://www.gutenberg.org/cache/epub/1023/pg1023.txt
+mv pg1023.txt $data/bleak/raw/bleak.txt
 
-wget https://www.gutenberg.org/files/52521/52521-0.txt
-mv 52521-0.txt $data/grimm/raw/tales.txt
+# Preprocess slightly
+cat $data/bleak/raw/bleak.txt | python $base/scripts/preprocess_raw.py > $data/bleak/raw/bleak.cleaned.txt
 
-# preprocess slightly
+# Tokenize, fix vocabulary upper bound
+cat $data/bleak/raw/bleak.cleaned.txt | python $base/scripts/preprocess.py --vocab-size 5000 --tokenize --lang "en" --sent-tokenize > \
+    $data/bleak/raw/bleak.preprocessed.txt
 
-cat $data/grimm/raw/tales.txt | python $base/scripts/preprocess_raw.py > $data/grimm/raw/tales.cleaned.txt
+# Split into train, valid, and test sets
+head -n 440 $data/bleak/raw/bleak.preprocessed.txt | tail -n 400 > $data/bleak/valid.txt
+head -n 840 $data/bleak/raw/bleak.preprocessed.txt | tail -n 400 > $data/bleak/test.txt
+tail -n 3075 $data/bleak/raw/bleak.preprocessed.txt | head -n 2955 > $data/bleak/train.txt
 
-# tokenize, fix vocabulary upper bound
-
-cat $data/grimm/raw/tales.cleaned.txt | python $base/scripts/preprocess.py --vocab-size 5000 --tokenize --lang "en" --sent-tokenize > \
-    $data/grimm/raw/tales.preprocessed.txt
-
-# split into train, valid and test
-
-head -n 440 $data/grimm/raw/tales.preprocessed.txt | tail -n 400 > $data/grimm/valid.txt
-head -n 840 $data/grimm/raw/tales.preprocessed.txt | tail -n 400 > $data/grimm/test.txt
-tail -n 3075 $data/grimm/raw/tales.preprocessed.txt | head -n 2955 > $data/grimm/train.txt
