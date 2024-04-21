@@ -79,7 +79,7 @@ The validation perplexity for each epoch is appended to the list associated with
 - Additional: included a function log_metrics_to_csv to save performance metrics like test perplexity into a CSV file for later analysis.
 
 Modifications have been made to accommodate the updated training setup and data processing requirements.
-After implementing these changes, you can proceed with training the models.
+After implementing these changes, you can proceed with training the model and generated text from a train model.
 
 
 
