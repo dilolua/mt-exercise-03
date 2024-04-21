@@ -1,15 +1,13 @@
-#!/bin/bash
+#! /bin/bash
 
 scripts=$(dirname "$0")
+PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:$PATH"
 base=$scripts/..
 
 data=$base/data
-
-mkdir -p $data
-
 tools=$base/tools
 
-# Link default training data for easier access
+# link default training data for easier access
 mkdir -p $data/wikitext-2
 
 for corpus in train valid test; do
@@ -17,23 +15,29 @@ for corpus in train valid test; do
     ln -snf $absolute_path $data/wikitext-2/$corpus.txt
 done
 
-# Download a different book - "Don Quixote" by Miguel de Cervantes
-mkdir -p $data/bleak
+# download a different interesting data set!
+mkdir -p $data/guthenberg
+mkdir -p $data/guthenberg/raw
 
-mkdir -p $data/bleak/raw
+wget https://www.gutenberg.org/cache/epub/1023/pg1023.txt -O $data/guthenberg/raw/bleak.txt
 
-wget https://www.gutenberg.org/cache/epub/1023/pg1023.txt
-mv pg1023.txt $data/bleak/raw/bleak.txt
+# Check if the download was successful before moving forward
+if [ -f "$data/guthenberg/raw/bleak.txt" ]; then
+    # preprocess slightly
+    cat $data/guthenberg/raw/bleak.txt | python $base/scripts/preprocess_raw.py > $data/guthenberg/raw/bleak.cleaned.txt
 
-# Preprocess slightly
-cat $data/bleak/raw/bleak.txt | python $base/scripts/preprocess_raw.py > $data/bleak/raw/bleak.cleaned.txt
+    # tokenize, fix vocabulary upper bound
+    cat $data/guthenberg/raw/bleak.cleaned.txt | python $base/scripts/preprocess.py --vocab-size 5000 --tokenize --lang "en" --sent-tokenize > \
+        $data/guthenberg/raw/bleak.preprocessed.txt
 
-# Tokenize, fix vocabulary upper bound
-cat $data/bleak/raw/bleak.cleaned.txt | python $base/scripts/preprocess.py --vocab-size 5000 --tokenize --lang "en" --sent-tokenize > \
-    $data/bleak/raw/bleak.preprocessed.txt
+    # split into train, valid, and test
+    # Creating the validation set
+    head -n 3105 $data/guthenberg/raw/bleak.preprocessed.txt | tail -n 3105 > $data/guthenberg/valid.txt
+    # Creating the test set
+    head -n 6210 $data/guthenberg/raw/bleak.preprocessed.txt | tail -n 3105 > $data/guthenberg/test.txt
+    # Creating the training set
+    tail -n 14590 $data/guthenberg/raw/bleak.preprocessed.txt > $data/guthenberg/train.txt
 
-# Split into train, valid, and test sets
-head -n 440 $data/bleak/raw/bleak.preprocessed.txt | tail -n 400 > $data/bleak/valid.txt
-head -n 840 $data/bleak/raw/bleak.preprocessed.txt | tail -n 400 > $data/bleak/test.txt
-tail -n 3075 $data/bleak/raw/bleak.preprocessed.txt | head -n 2955 > $data/bleak/train.txt
-
+else
+    echo "Error: Failed to download bleak.txt"
+fi
