@@ -18,7 +18,7 @@ This text will serve as the training dataset for our models.
 - Dropout Settings: Multiple dropout values have been specified, including 0, 0.2, 0.5, 0.7, and 0.9, to explore various regularization strengths.
 - Custom Logging: The --ppl-log parameter has been added for additional logging, performance tracking.
 
-# Update to /tools/pytorch-examples/word language model/main.py:
+# Update to main.py:
 
 - Argument Parser: The --dropout argument in the updated version accepts multiple values (nargs="+"), allowing for different dropout settings to be tested simultaneously.
 --ppl-log: A new argument --ppl-log was added to log the perplexities of each model after each epoch.
