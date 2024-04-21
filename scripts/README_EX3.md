@@ -17,7 +17,7 @@ This text will serve as the training dataset for our models.
 - Device Specification: The device is set to "mps", enabling the use of Apple's Metal Performance Shaders (MPS) for GPU support.
 - Dataset Update: The training dataset has been changed to --data $data/guthenberg.
 - Dropout Settings: Multiple dropout values have been specified, including 0, 0.2, 0.5, 0.7, and 0.9, to explore various regularization strengths.
-- Custom Logging: The --ppl-log parameter has been added for additional logging or performance tracking.
+- Custom Logging: The --ppl-log parameter has been added for additional logging, performance tracking.
 
 # Update to main.py:
 
