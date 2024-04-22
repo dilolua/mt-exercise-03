@@ -45,8 +45,9 @@ Generate (sample) some text from a trained model with:
 # Update to download_data.sh:
 
 We have updated the download_data.sh script to download "Bleak House" by Charles Dickens from https://www.gutenberg.org/cache/epub/1023/pg1023.txt.
+After we have preprocessed our data (Folder data). 
 This text will serve as the training dataset for our models.
-After we have preprocessed our data.(Folder data)
+
 
 
 # Update to train.sh:
