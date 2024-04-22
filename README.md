@@ -41,7 +41,7 @@ Generate (sample) some text from a trained model with:
 
     ./scripts/generate.sh
     
-You can see different samples and clarification in our pdf. 
+You can see different samples and clarification in our pdf(p. 5-7). 
 
 # Update to download_data.sh:
 
@@ -60,7 +60,7 @@ This text will serve as the training dataset for our models.
 - Dropout Settings: Multiple dropout values have been specified, including 0, 0.2, 0.5, 0.7, and 0.9, to explore various regularization strengths.
 
 
-# Update to main.py (from /tools/pytorch-examples/word language model):
+# Update to main.py (from /tools/pytorch-examples/word language model, now located in scripts):
 
 - Argument Parser: The --dropout argument in the updated version accepts multiple values (nargs="+"), allowing for different dropout settings to be tested simultaneously.
 --ppl-log: A new argument --ppl-log was added to log the perplexities of each model after each epoch.
