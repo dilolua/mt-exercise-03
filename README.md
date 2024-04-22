@@ -53,11 +53,9 @@ This text will serve as the training dataset for our models.
 
 # Update to train.sh:
 
-- Path Resolution: The script now uses readlink -f to fully resolve all symbolic links and determine the base path accurately.
 - Logging Directory: A new directory structure $scripts/task2/logs has been created for logging purposes.
 - Device Specification: The device is set to "mps", enabling the use of Apple's Metal Performance Shaders (MPS) for GPU support.
 - Dataset Update: The training dataset has been changed to --data $data/guthenberg.
-- Dropout Settings: Multiple dropout values have been specified, including 0, 0.2, 0.5, 0.7, and 0.9, to explore various regularization strengths.
 
 
 # Update to main.py (from /tools/pytorch-examples/word language model, now located in scripts):
